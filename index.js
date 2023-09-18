@@ -9,6 +9,11 @@ async function asanaOperations(asanaPAT, targetSection, taskId, taskComment, mar
         }).useAccessToken(asanaPAT);
 
         const task = await client.tasks.findById(taskId);
+        const tags = task.tags.map((t) => t.name);
+        if (tags.includes("needs-uat")) {
+            targetSection = "In UAT";
+            markComplete = false;
+        }
 
         if (targetSection) {
             task.projects.forEach(async (project) => {
